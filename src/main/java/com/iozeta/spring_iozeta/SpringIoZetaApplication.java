@@ -8,6 +8,7 @@ public class SpringIoZetaApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringIoZetaApplication.class, args);
+        System.out.println("Hello world!");
     }
 
 }
