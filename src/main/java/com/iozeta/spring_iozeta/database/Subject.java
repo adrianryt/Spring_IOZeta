@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="Subjects")
@@ -22,4 +24,10 @@ public class Subject {
     @Column(name = "repository_name")
     private String repoName;
 
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id")
+    private Lecturer lecturer;
+
+    @OneToMany(mappedBy = "subject")
+    private Set<Task> tasks = new HashSet<>();
 }

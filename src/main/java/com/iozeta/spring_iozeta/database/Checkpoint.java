@@ -21,4 +21,8 @@ public class Checkpoint {
 
     @Column(name = "content")
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    private Task task;
 }

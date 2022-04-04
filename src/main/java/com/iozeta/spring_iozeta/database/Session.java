@@ -24,4 +24,8 @@ public class Session {
 
     @Column(name = "is_active")
     private boolean active;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    private Task task;
 }

@@ -7,12 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="Progresses")
-@Getter
-@Setter
-public class Progress {
-
-    @Column(name = "is_done")
-    private boolean done;
-}
+//@Entity
+//@Table(name="Progresses")
+//@Getter
+//@Setter
+//public class Progress {
+//
+//    @Column(name = "is_done")
+//    private boolean done;
+//}

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="Lecturers")
@@ -27,4 +29,7 @@ public class Lecturer {
 
     @Column(name = "git_token")
     private String gitToken;
+
+    @OneToMany(mappedBy = "lecturer")
+    private Set<Subject> subjects = new HashSet<>();
 }
