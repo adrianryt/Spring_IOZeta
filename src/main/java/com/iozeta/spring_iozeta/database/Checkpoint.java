@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="Checkpoints")
@@ -25,4 +26,7 @@ public class Checkpoint {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
+
+    @OneToMany(mappedBy = "checkpoint")
+    private Set<Progress> progresses;
 }

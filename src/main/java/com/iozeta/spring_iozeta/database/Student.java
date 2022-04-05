@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="Students")
@@ -21,4 +22,7 @@ public class Student {
 
     @Column(name = "branch_name")
     private String branchName;
+
+    @OneToMany(mappedBy = "student")
+    private Set<Progress> progresses;
 }

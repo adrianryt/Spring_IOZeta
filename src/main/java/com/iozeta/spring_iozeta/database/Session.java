@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="Sessions")
@@ -28,4 +29,7 @@ public class Session {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
+
+    @OneToMany(mappedBy = "session")
+    private Set<Progress> progresses;
 }
