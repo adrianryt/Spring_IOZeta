@@ -1,4 +1,4 @@
-package com.iozeta.spring_iozeta.database;
+package com.iozeta.SpringIOZeta.Database.Entities;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.session:spring-session-jdbc'
+    implementation 'junit:junit:4.13.1'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
@@ -34,8 +35,13 @@ dependencies {
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
-tasks.named('test') {
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
+
+test {
     useJUnitPlatform()
 }
