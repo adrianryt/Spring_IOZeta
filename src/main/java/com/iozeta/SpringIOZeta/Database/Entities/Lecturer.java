@@ -32,4 +32,8 @@ public class Lecturer {
 
     @OneToMany(mappedBy = "lecturer")
     private Set<Subject> subjects = new HashSet<>();
+
+    public void addSubject(Subject subject) {
+        subjects.add(subject);
+    }
 }

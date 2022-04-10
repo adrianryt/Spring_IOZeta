@@ -33,4 +33,12 @@ public class Task {
 
     @OneToMany(mappedBy = "task")
     private Set<Session> sessions = new HashSet<>();
+
+    public void addCheckpoint(Checkpoint checkpoint) {
+        checkpoints.add(checkpoint);
+    }
+
+    public void addSession(Session session) {
+        sessions.add(session);
+    }
 }

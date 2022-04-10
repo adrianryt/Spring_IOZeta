@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,5 +29,9 @@ public class Checkpoint {
     private Task task;
 
     @OneToMany(mappedBy = "checkpoint")
-    private Set<Progress> progresses;
+    private Set<Progress> progresses = new HashSet<>();
+
+    public void addProgress(Progress progress) {
+        progresses.add(progress);
+    }
 }

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SessionRepository extends JpaRepository<Session, Integer> {
+public interface LabSessionRepository extends JpaRepository<Session, Long> {
     List<Session> findAllBy();
 }

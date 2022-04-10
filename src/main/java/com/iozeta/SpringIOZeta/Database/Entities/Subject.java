@@ -30,4 +30,8 @@ public class Subject {
 
     @OneToMany(mappedBy = "subject")
     private Set<Task> tasks = new HashSet<>();
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
 }
