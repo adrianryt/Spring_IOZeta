@@ -8,24 +8,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="Checkpoints")
+@Table(name="CHECKPOINTS")
 @Getter
 @Setter
 public class Checkpoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "checkpoint_id")
+    @Column(name = "CHECKPOINT_ID")
     private long id;
 
-    @Column(name = "number")
+    @Column(name = "NUMBER")
     private int number;
 
-    @Column(name = "content")
+    @Column(name = "CONTENT")
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
+    @JoinColumn(name = "TASK_ID")
     private Task task;
 
     @OneToMany(mappedBy = "checkpoint")

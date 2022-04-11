@@ -6,28 +6,28 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="Progresses")
+@Table(name="PROGRESSES")
 @Getter
 @Setter
 public class Progress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "progress_id")
+    @Column(name = "PROGRESS_ID")
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "STUDENT_ID")
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "session_id")
+    @JoinColumn(name = "SESSION_ID")
     private Session session;
 
     @ManyToOne
-    @JoinColumn(name = "checkpoint_id")
+    @JoinColumn(name = "CHECKPOINT_ID")
     private Checkpoint checkpoint;
 
-    @Column(name = "is_done")
+    @Column(name = "IS_DONE")
     private boolean done;
 }

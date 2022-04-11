@@ -8,27 +8,27 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="Sessions")
+@Table(name="SESSIONS")
 @Getter
 @Setter
 public class Session {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "session_id")
+    @Column(name = "SESSION_ID")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "access_code")
+    @Column(name = "ACCESS_CODE")
     private String access_code;
 
-    @Column(name = "is_active")
+    @Column(name = "IS_ACTIVE")
     private boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
+    @JoinColumn(name = "TASK_ID")
     private Task task;
 
     @OneToMany(mappedBy = "session")

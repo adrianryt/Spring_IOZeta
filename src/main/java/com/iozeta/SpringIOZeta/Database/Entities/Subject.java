@@ -8,24 +8,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="Subjects")
+@Table(name="SUBJECTS")
 @Getter
 @Setter
 public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subject_id")
+    @Column(name = "SUBJECT_ID")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "repository_name")
+    @Column(name = "REPOSITORY_NAME")
     private String repoName;
 
     @ManyToOne
-    @JoinColumn(name = "lecturer_id")
+    @JoinColumn(name = "LECTURER_ID")
     private Lecturer lecturer;
 
     @OneToMany(mappedBy = "subject")

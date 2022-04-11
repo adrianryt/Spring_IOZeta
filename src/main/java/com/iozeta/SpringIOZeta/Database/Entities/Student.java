@@ -8,20 +8,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="Students")
+@Table(name="STUDENTS")
 @Getter
 @Setter
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id")
+    @Column(name = "STUDENT_ID")
     private long id;
 
-    @Column(name = "git_nick")
+    @Column(name = "GIT_NICK")
     private String gitNick;
 
-    @Column(name = "branch_name")
+    @Column(name = "BRANCH_NAME")
     private String branchName;
 
     @OneToMany(mappedBy = "student")
