@@ -3,6 +3,7 @@ package com.iozeta.SpringIOZeta.Database;
 import com.iozeta.SpringIOZeta.Database.Entities.*;
 import com.iozeta.SpringIOZeta.Database.Repositories.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -33,6 +34,7 @@ public class IntegrationTest {
     @Autowired StudentRepository studentRepository;
 
     @Test
+    @DisplayName("Entire flow")
     public void entireFlow() {
 
         //create lecturer with some parameters
