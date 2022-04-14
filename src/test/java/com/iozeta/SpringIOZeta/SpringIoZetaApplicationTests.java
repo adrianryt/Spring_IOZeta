@@ -1,4 +1,4 @@
-package com.iozeta.spring_iozeta;
+package com.iozeta.SpringIOZeta;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,6 +1,6 @@
 # Spring_IOZeta
 
-##Zasady ogólne:
+## Zasady ogólne:
 
 * Obowiązkowe code review (2 ticki)  (sprawdzamy też testy!)
 * Dodajemy testy do kodu (jeśli są potrzebne)
