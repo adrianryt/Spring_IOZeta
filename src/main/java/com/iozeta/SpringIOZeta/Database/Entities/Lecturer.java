@@ -29,11 +29,4 @@ public class Lecturer {
 
     @Column(name = "GIT_TOKEN")
     private String gitToken;
-
-    @OneToMany(mappedBy = "lecturer")
-    private Set<Subject> subjects = new HashSet<>();
-
-    public void addSubject(Subject subject) {
-        subjects.add(subject);
-    }
 }

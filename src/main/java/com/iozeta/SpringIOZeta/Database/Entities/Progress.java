@@ -1,5 +1,6 @@
 package com.iozeta.SpringIOZeta.Database.Entities;
 
+import com.iozeta.SpringIOZeta.Database.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,9 @@ public class Progress {
     @JoinColumn(name = "CHECKPOINT_ID")
     private Checkpoint checkpoint;
 
-    @Column(name = "IS_DONE")
-    private boolean done;
+    @Column(name = "LINK_TO_COMMIT")
+    private String linkToCommit;
+
+    @Column(name = "STATUS")
+    private Status status;
 }

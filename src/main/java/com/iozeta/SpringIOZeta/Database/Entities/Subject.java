@@ -21,17 +21,7 @@ public class Subject {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "REPOSITORY_NAME")
-    private String repoName;
-
     @ManyToOne
     @JoinColumn(name = "LECTURER_ID")
     private Lecturer lecturer;
-
-    @OneToMany(mappedBy = "subject")
-    private Set<Task> tasks = new HashSet<>();
-
-    public void addTask(Task task) {
-        tasks.add(task);
-    }
 }
