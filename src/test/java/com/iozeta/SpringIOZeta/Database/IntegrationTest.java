@@ -99,6 +99,7 @@ public class IntegrationTest {
         progress.setStudent(student);
         progress.setCheckpoint(checkpoint);
         progress.setStatus(Status.NOT_DONE);
+        progress.setCommitHash("39617cfb3e83092eaec722d86b3d69be6a723b16");
         Progress tmpProgress = progressRepository.save(progress);
 
         //get all from database

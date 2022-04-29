@@ -29,8 +29,8 @@ public class Progress {
     @JoinColumn(name = "CHECKPOINT_ID")
     private Checkpoint checkpoint;
 
-    @Column(name = "LINK_TO_COMMIT")
-    private String linkToCommit;
+    @Column(name = "COMMIT_HASH")
+    private String commitHash;
 
     @Column(name = "STATUS")
     private Status status;
