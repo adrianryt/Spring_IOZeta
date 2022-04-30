@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,10 +32,19 @@ public class Lecturer {
     @Column(name = "GIT_TOKEN")
     private String gitToken;
 
-    @OneToMany(mappedBy = "lecturer")
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Subject> subjects = new HashSet<>();
+
+    @Column
+    private String password;
 
     public void addSubject(Subject subject) {
         subjects.add(subject);
+    }
+
+    public List<String> getRoles(){
+        List<String> roles = new ArrayList<>();
+        roles.add("LECTURER");
+        return roles;
     }
 }

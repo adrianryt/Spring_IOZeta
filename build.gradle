@@ -36,6 +36,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'com.auth0:java-jwt:3.19.1'
 }
 
 test {
