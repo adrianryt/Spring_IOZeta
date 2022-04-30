@@ -1,6 +1,6 @@
 package com.iozeta.SpringIOZeta;
 
-import com.iozeta.spring_iozeta.Controllers.utilities.EntranceCodeGenerator;
+import com.iozeta.SpringIOZeta.Controllers.utilities.EntranceCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
