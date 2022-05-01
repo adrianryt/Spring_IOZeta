@@ -27,11 +27,4 @@ public class Checkpoint {
     @ManyToOne
     @JoinColumn(name = "TASK_ID")
     private Task task;
-
-    @OneToMany(mappedBy = "checkpoint")
-    private Set<Progress> progresses = new HashSet<>();
-
-    public void addProgress(Progress progress) {
-        progresses.add(progress);
-    }
 }

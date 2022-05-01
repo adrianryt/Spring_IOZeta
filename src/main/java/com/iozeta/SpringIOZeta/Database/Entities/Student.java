@@ -23,11 +23,4 @@ public class Student {
 
     @Column(name = "BRANCH_NAME")
     private String branchName;
-
-    @OneToMany(mappedBy = "student")
-    private Set<Progress> progresses = new HashSet<>();
-
-    public void addProgress(Progress progress) {
-        progresses.add(progress);
-    }
 }
