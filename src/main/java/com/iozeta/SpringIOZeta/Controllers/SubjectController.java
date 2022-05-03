@@ -30,11 +30,15 @@ public class SubjectController {
         return ResponseEntity.ok().body(subjectRepository.getSubjectById(id));
     }
 
-    //to może się zmieniać zależnie od danych, które będą wysłane
     @PostMapping
     public ResponseEntity<Subject> saveSubject(@RequestBody Subject subject) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("subject/save").toUriString());
+
+        Long lecturerId = subject.getLecturer().getId();
+        Lecturer lecturer = lecturerRepository.getLecturerById(lecturerId);
+        subject.setLecturer(lecturer);
         subjectRepository.save(subject);
+
         return ResponseEntity.created(uri).build();
     }
 }
