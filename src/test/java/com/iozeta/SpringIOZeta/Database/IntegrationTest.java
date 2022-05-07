@@ -77,7 +77,7 @@ public class IntegrationTest {
         //create session
         Session session = new Session();
         session.setName("Name");
-        session.setAccess_code("Some code");
+        session.setAccessCode("Some code");
         session.setTask(task);
         session.setActive(true);
         Session tmpSession = sessionRepository.save(session);
