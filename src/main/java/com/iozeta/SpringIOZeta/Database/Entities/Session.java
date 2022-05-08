@@ -22,7 +22,7 @@ public class Session {
     private String name;
 
     @Column(name = "ACCESS_CODE")
-    private String access_code;
+    private String accessCode;
 
     @Column(name = "IS_ACTIVE")
     private boolean active;
