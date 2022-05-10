@@ -21,24 +21,10 @@ public class Task {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "BRANCH_NAME")
-    private String branchName;
+    @Column(name = "REPOSITORY_NAME")
+    private String repoName;
 
     @ManyToOne
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
-
-    @OneToMany(mappedBy = "task")
-    private Set<Checkpoint> checkpoints = new HashSet<>();
-
-    @OneToMany(mappedBy = "task")
-    private Set<Session> sessions = new HashSet<>();
-
-    public void addCheckpoint(Checkpoint checkpoint) {
-        checkpoints.add(checkpoint);
-    }
-
-    public void addSession(Session session) {
-        sessions.add(session);
-    }
 }

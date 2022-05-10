@@ -52,12 +52,7 @@ public class IntegrationTest {
         Subject subject = new Subject();
         subject.setName("IO");
         subject.setLecturer(lecturer);
-        subject.setRepoName("IORepo");
         Subject tmpSubject = subjectRepository.save(subject);
-
-        //add subject to lecturer and save
-        lecturer.addSubject(subject);
-        lecturerRepository.save(lecturer);
 
         //get subject from database
         subject = subjectRepository.getById(tmpSubject.getId());
@@ -66,12 +61,8 @@ public class IntegrationTest {
         Task task = new Task();
         task.setName("Task1");
         task.setSubject(subject);
-        task.setBranchName("IO_Task1");
+        task.setRepoName("IORepo");
         Task tmpTask = taskRepository.save(task);
-
-        //add task to subject and save
-        subject.addTask(task);
-        subjectRepository.save(subject);
 
         //get task from database
         task = taskRepository.getById(tmpTask.getId());
@@ -86,15 +77,10 @@ public class IntegrationTest {
         //create session
         Session session = new Session();
         session.setName("Name");
-        session.setAccess_code("Some code");
+        session.setAccessCode("Some code");
         session.setTask(task);
         session.setActive(true);
         Session tmpSession = sessionRepository.save(session);
-
-        //add checkpoint to task
-        task.addCheckpoint(checkpoint);
-        //add session to task
-        task.addSession(session);
 
         //create student
         Student student = new Student();
@@ -112,18 +98,9 @@ public class IntegrationTest {
         progress.setSession(session);
         progress.setStudent(student);
         progress.setCheckpoint(checkpoint);
-        progress.setDone(false);
+        progress.setStatus(Status.NOT_DONE);
+        progress.setCommitHash("39617cfb3e83092eaec722d86b3d69be6a723b16");
         Progress tmpProgress = progressRepository.save(progress);
-
-        //add progress to student, session and checkpoint
-        student.addProgress(progress);
-        session.addProgress(progress);
-        checkpoint.addProgress(progress);
-
-        //save changes
-        studentRepository.save(student);
-        sessionRepository.save(session);
-        checkpointRepository.save(checkpoint);
 
         //get all from database
         Lecturer lecturer2 = lecturerRepository.getById(tmpLecturer.getId());
@@ -135,31 +112,24 @@ public class IntegrationTest {
         Student student2 = studentRepository.getById(tmpStudent.getId());
 
         //check relation between lecturer and subject
-        Assertions.assertTrue(lecturer2.getSubjects().contains(subject2));
         Assertions.assertEquals(subject2.getLecturer(), lecturer2);
 
         //check relation between subject and task
-        Assertions.assertTrue(subject2.getTasks().contains(task2));
         Assertions.assertEquals(task2.getSubject(), subject2);
 
         //check relation between task and checkpoint
-        Assertions.assertTrue(task2.getCheckpoints().contains(checkpoint2));
         Assertions.assertEquals(checkpoint2.getTask(), task2);
 
         //check relation between task and session
-        Assertions.assertTrue(task2.getSessions().contains(session2));
         Assertions.assertEquals(session2.getTask(), task2);
 
         //check relation between session and progress
-        Assertions.assertTrue(session2.getProgresses().contains(progress2));
         Assertions.assertEquals(progress2.getSession(), session2);
 
         //check relation between checkpoint and progress
-        Assertions.assertTrue(checkpoint2.getProgresses().contains(progress2));
         Assertions.assertEquals(progress2.getCheckpoint(), checkpoint2);
 
         //check relation between student and progress
-        Assertions.assertTrue(student2.getProgresses().contains(progress2));
         Assertions.assertEquals(progress2.getStudent(), student2);
     }
 

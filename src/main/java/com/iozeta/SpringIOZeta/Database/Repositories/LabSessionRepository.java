@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface LabSessionRepository extends JpaRepository<Session, Long> {
     List<Session> findAllBy();
+    Session findSessionByAccessCode(String accessCode);
 }

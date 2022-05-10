@@ -22,7 +22,7 @@ public class Session {
     private String name;
 
     @Column(name = "ACCESS_CODE")
-    private String access_code;
+    private String accessCode;
 
     @Column(name = "IS_ACTIVE")
     private boolean active;
@@ -30,11 +30,4 @@ public class Session {
     @ManyToOne
     @JoinColumn(name = "TASK_ID")
     private Task task;
-
-    @OneToMany(mappedBy = "session")
-    private Set<Progress> progresses = new HashSet<>();
-
-    public void addProgress(Progress progress) {
-        progresses.add(progress);
-    }
 }
