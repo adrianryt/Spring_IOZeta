@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class LecturerServiceImpl implements LecturerService, UserDetailsService 
             lecturer.getRoles().forEach(role -> {
                 authorities.add(new SimpleGrantedAuthority(role));
             });
-            return new org.springframework.security.core.userdetails.User(lecturer.getGitNick(), lecturer.getPassword(), authorities);
+            return new User(lecturer.getGitNick(), lecturer.getPassword(), authorities);
         }
     }
 
