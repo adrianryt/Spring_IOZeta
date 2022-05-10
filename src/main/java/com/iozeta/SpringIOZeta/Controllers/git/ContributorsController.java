@@ -5,7 +5,7 @@ import com.iozeta.SpringIOZeta.Database.Entities.Lecturer;
 import com.iozeta.SpringIOZeta.Database.Entities.Student;
 import com.iozeta.SpringIOZeta.Database.Repositories.LecturerRepository;
 import com.iozeta.SpringIOZeta.Database.Repositories.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,14 +27,13 @@ import static com.iozeta.SpringIOZeta.Controllers.git.RepositoriesController.pre
 
 @RestController
 @RequestMapping(value = "/git")
+@RequiredArgsConstructor
 public class ContributorsController {
 
     private WebClient webClient = WebClient.create("https://api.github.com");
-    @Autowired
-    private LecturerRepository lecturerRepository;
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final LecturerRepository lecturerRepository;
+    private final StudentRepository studentRepository;
 
     @RequestMapping(value = "/contributors", method = RequestMethod.POST)
     public ResponseEntity<?> addContributor(@RequestBody Map<String, String> body) {

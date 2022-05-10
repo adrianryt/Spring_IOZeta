@@ -3,11 +3,10 @@ package com.iozeta.SpringIOZeta.Controllers.git;
 import com.iozeta.SpringIOZeta.Database.Entities.Lecturer;
 import com.iozeta.SpringIOZeta.Database.Repositories.LecturerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,12 +18,9 @@ import org.springframework.web.reactive.function.client.WebClient.RequestBodySpe
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
 import reactor.core.publisher.Mono;
 
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.net.MulticastSocket;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,9 +30,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RepositoriesController {
 
+    private WebClient webClient = WebClient.create("https://api.github.com");
     private final LecturerRepository lecturerRepository;
-
-    private final WebClient webClient = WebClient.create("https://api.github.com");
 
     @RequestMapping(value = "/repo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON)
     public ResponseEntity<?> createRepository(@RequestBody Map<String, String> body) {
