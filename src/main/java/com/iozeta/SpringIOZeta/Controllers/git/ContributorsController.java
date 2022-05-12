@@ -8,16 +8,11 @@ import com.iozeta.SpringIOZeta.Database.Repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-
-import javax.ws.rs.core.HttpHeaders;
 
 import java.util.Map;
 import java.util.Objects;
@@ -28,9 +23,7 @@ import static com.iozeta.SpringIOZeta.Controllers.git.RepositoriesController.pre
 @RestController
 @RequestMapping(value = "/git")
 @RequiredArgsConstructor
-public class ContributorsController {
-
-    private WebClient webClient = WebClient.create("https://api.github.com");
+public class ContributorsController extends AbstractGitController {
 
     private final LecturerRepository lecturerRepository;
     private final StudentRepository studentRepository;
@@ -38,7 +31,7 @@ public class ContributorsController {
     @RequestMapping(value = "/contributors", method = RequestMethod.POST)
     public ResponseEntity<?> addContributor(@RequestBody Map<String, String> body) {
 
-        String lecturerNickname = body.get("lecturer");
+        String lecturerNickname = body.get("lecturer_nickname");
         String repoName = body.get("repo_name");
         String studentNickname = body.get("student_nickname");
 
@@ -52,10 +45,11 @@ public class ContributorsController {
             return new ResponseEntity<>("Student not found. Invalid git nickname.", HttpStatus.BAD_REQUEST);
         }
 
-        String uri = "/repos" + lecturerNickname + "/" + repoName + "/collaborators" + "/" + studentNickname;
+        String uri = "/repos/" + lecturerNickname + "/" + repoName + "/collaborators/" + studentNickname;
 
-        var requestBody = prepareGitHubRequest(webClient.post(), uri, new LinkedMultiValueMap<>())
-            .header(HttpHeaders.CONTENT_LENGTH, "0");
+        var requestBody = prepareGitHubRequest(
+                put(), uri, "", lecturer.getGitNick(),
+                lecturer.getGitToken());
 
         Mono<String> r = getResponseFromGitHub(requestBody);
 

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllBy();
+    Task findByRepoName(String repoName);
 }
