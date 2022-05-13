@@ -1,11 +1,10 @@
 package com.iozeta.SpringIOZeta.Database.Entities;
 
+import com.iozeta.SpringIOZeta.Database.Entities.utilities.Content;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name="CHECKPOINTS")
@@ -21,8 +20,9 @@ public class Checkpoint {
     @Column(name = "NUMBER")
     private int number;
 
-    @Column(name = "CONTENT")
-    private String content;
+    @OneToOne
+    @JoinColumn(name = "CONTENT_ID")
+    private Content content;
 
     @ManyToOne
     @JoinColumn(name = "TASK_ID")

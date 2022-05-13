@@ -2,6 +2,7 @@ package com.iozeta.SpringIOZeta.Database.Entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SUBJECT_ID")
     private long id;
+
 
     @Column(name = "NAME")
     private String name;

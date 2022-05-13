@@ -22,6 +22,9 @@ public class Task {
     @Column(name = "REPOSITORY_NAME")
     private String repoName;
 
+    @Column(name = "REPOSITORY_LINK")
+    private String repoLink;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
