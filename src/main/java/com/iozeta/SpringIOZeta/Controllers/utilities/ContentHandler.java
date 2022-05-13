@@ -1,8 +1,11 @@
 package com.iozeta.SpringIOZeta.Controllers.utilities;
 
+import lombok.Getter;
+
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
+@Getter
 public class ContentHandler {
     @NotNull
     private String title;
@@ -10,18 +13,6 @@ public class ContentHandler {
     private String description;
     @NotNull
     private String[] commands;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String[] getCommands() {
-        return commands;
-    }
 
     @Override
     public String toString() {
