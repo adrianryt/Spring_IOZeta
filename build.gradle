@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     id 'org.springframework.boot' version '2.6.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -42,6 +44,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'com.auth0:java-jwt:3.19.1'
+
+    if (Os.isFamily(Os.FAMILY_MAC)){
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.72.Final:osx-aarch_64'
+    }
 }
 
 test {
