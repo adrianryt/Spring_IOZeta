@@ -17,9 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.iozeta.SpringIOZeta.Controllers.git.RepositoriesController.getResponseFromGitHub;
-import static com.iozeta.SpringIOZeta.Controllers.git.RepositoriesController.prepareGitHubRequest;
-
 @RestController
 @RequestMapping(value = "/git")
 @RequiredArgsConstructor
@@ -123,6 +120,5 @@ public class BranchesController extends AbstractGitController {
         }
 
     }
-
 
 }
