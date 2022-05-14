@@ -1,4 +1,4 @@
-package com.iozeta.SpringIOZeta.Controllers;
+package com.iozeta.SpringIOZeta.SecurityConfig.filter;
 
 import org.springframework.stereotype.Component;
 
