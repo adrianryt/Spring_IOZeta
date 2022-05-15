@@ -26,6 +26,6 @@ public class Task {
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
 
-    @Column(name="COMMIT_SHA")
-    private String commitSha;
+    public String getSubjectName(){ return subject.getName(); }
+
 }
