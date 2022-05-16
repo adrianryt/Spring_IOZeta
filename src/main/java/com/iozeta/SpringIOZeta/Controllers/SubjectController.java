@@ -30,15 +30,14 @@ public class SubjectController {
         return ResponseEntity.ok().body(subjectRepository.getSubjectById(id));
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<Subject> saveSubject(@RequestBody Subject subject) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("subject/save").toUriString());
 
         Long lecturerId = subject.getLecturer().getId();
         Lecturer lecturer = lecturerRepository.getLecturerById(lecturerId);
         subject.setLecturer(lecturer);
-        subjectRepository.save(subject);
 
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(subjectRepository.save(subject));
     }
 }

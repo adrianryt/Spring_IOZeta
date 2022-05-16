@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //        narazie mamy tutaj takie demu uprawnień, dokładnie określimy to po ustaleniu szczegółów
 //        jak dajemy permit all nie potrzeba logowania do dostępu tam
-        http.authorizeRequests().antMatchers("/api/login/**","/api/token/refresh/**","/api/lecturer/save").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**","/api/token/refresh/**","/api/lecturer/save", "/sessions/**", "/subjects/**").permitAll();
         http.authorizeRequests().antMatchers("/api/lecturers").hasAnyAuthority("LECTURER");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
