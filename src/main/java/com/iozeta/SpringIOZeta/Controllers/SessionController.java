@@ -114,7 +114,7 @@ public class SessionController {
 
         JsonArray checkpointNames = new JsonArray();
         for(Checkpoint checkpoint: checkpoints) {
-            checkpointNames.add(checkpoint.getContent());
+            checkpointNames.add(checkpoint.getContent().getTitle());
         }
 
         response.add("checkpointNames", checkpointNames);
@@ -134,7 +134,7 @@ public class SessionController {
             for(Progress progress: studentProgresses) {
                 JsonObject commit = new JsonObject();
 
-                commit.addProperty("checkpointName", progress.getCheckpoint().getContent());
+                commit.addProperty("checkpointName", progress.getCheckpoint().getContent().getTitle());
                 commit.addProperty("stat", progress.getStatus().toString());
                 commit.addProperty("url", progress.getCommitHash());
 
