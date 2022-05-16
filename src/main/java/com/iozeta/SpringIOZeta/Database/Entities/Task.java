@@ -28,4 +28,6 @@ public class Task {
 
     @Column(name="COMMIT_SHA")
     private String commitSha;
+
+    public String getSubjectName(){ return subject.getName(); }
 }
