@@ -27,7 +27,7 @@ public class Session {
     @Column(name = "IS_ACTIVE")
     private boolean active;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TASK_ID")
     private Task task;
 }

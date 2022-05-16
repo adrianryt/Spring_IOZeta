@@ -22,7 +22,7 @@ public class Task {
     @Column(name = "REPOSITORY_NAME")
     private String repoName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
 

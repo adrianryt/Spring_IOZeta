@@ -9,4 +9,5 @@ import java.util.List;
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     List<Subject> findAllBy();
     Subject getSubjectById(Long id);
+    List<Subject> findSubjectsByLecturer(Lecturer lecturer);
 }
