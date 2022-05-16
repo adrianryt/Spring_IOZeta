@@ -1,10 +1,11 @@
 package com.iozeta.SpringIOZeta.Controllers.utilities;
 
-import com.iozeta.SpringIOZeta.Database.Entities.utilities.Content;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
+@Getter
 public class NewTaskForm {
 
     @NotNull
@@ -23,30 +24,6 @@ public class NewTaskForm {
     private String lecturerGitNick;
 
     private ContentHandler[] checkpointsContent;
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public String getRepositoryLink() {
-        return repositoryLink;
-    }
-
-    public String getRepositoryName() {
-        return repositoryName;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getLecturerGitNick() {
-        return lecturerGitNick;
-    }
-
-    public ContentHandler[] getCheckpointsContent() {
-        return checkpointsContent;
-    }
 
     @Override
     public String toString() {

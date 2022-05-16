@@ -55,8 +55,6 @@ public class TasksController {
             Content content = new Content();
             content.setTitle(checkpoints[i].getTitle());
             content.setDescription(checkpoints[i].getDescription());
-            // when returning checkpoint we need to split this String with &
-            content.setCommands(String.join("&", checkpoints[i].getCommands()));
             checkpoint.setContent(contentRepository.save(content));
             checkpoint.setTask(task);
             checkpoint.setNumber(i+1);
@@ -76,7 +74,7 @@ public class TasksController {
             System.out.println(lecturer);
             throw new ClassNotFoundException("Wrong subject or lecturer");
         }
-        task.setSubject(this.subjectRepository.getSubjectByNameAndLecturer(subjectName, lecturer));
+        task.setSubject(subject);
         return this.taskRepository.save(task);
     }
 }

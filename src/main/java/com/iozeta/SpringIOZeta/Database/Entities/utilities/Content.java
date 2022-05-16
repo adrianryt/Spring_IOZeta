@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="Content")
+@Table(name="Contents")
 @Getter
 @Setter
 public class Content {
@@ -20,7 +20,4 @@ public class Content {
 
     @Column(name = "DESCRIPTION")
     private String description;
-
-    @Column(name = "COMMANDS")
-    private String commands;
 }
