@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.gson.JsonObject;
 
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 import java.net.URI;
 import java.util.*;
 
@@ -43,8 +44,6 @@ public class SessionController {
 
         String entranceCode = this.entranceCodeGenerator.generateCode();
 
-        System.out.println(session.getTask().getId());
-
         Task task = taskRepository.getById(session.getTask().getId());
 
         session.setAccessCode(entranceCode);
@@ -52,9 +51,6 @@ public class SessionController {
         session.setTask(task);
 
         session = sessionRepository.save(session);
-        System.out.println(session.getAccessCode());
-        System.out.println(session.isActive());
-        System.out.println(session.getTask().getName());
 
         return ResponseEntity.created(uri).body(session);
     }
@@ -78,85 +74,43 @@ public class SessionController {
         return ResponseEntity.created(uri).build();
     }
 
-    //this needs json with lecturer_id
-    /*
-    {
-        "id": ...
-    }
-    */
-    @GetMapping("/active-sessions")
-    public ResponseEntity<List<Session>> getActiveSessions(@Valid @RequestBody Lecturer lecturer) {
-        lecturer = lecturerRepository.getLecturerById(lecturer.getId());
+    @GetMapping("/active-sessions&{lecturer_id}")
+    public ResponseEntity<List<Session>> getActiveSessions(@PathVariable Long lecturer_id) {
+        Lecturer finalLecturer = lecturerRepository.getLecturerById(lecturer_id);
 
-        System.out.println(lecturer.getId());
-
-        List<Session> activeSessions = new ArrayList<>();
-
-        List<Session> sessions = sessionRepository.findAll();
-        for(Session session: sessions) {
-            if(session.isActive() && session.getTask().getSubject().getLecturer().getId() == lecturer.getId())
-                activeSessions.add(session);
-        }
+        List<Session> activeSessions = sessionRepository.findAll().stream().filter(session -> session.isActive()
+                && session.getTask().getSubject().getLecturer().getId() == finalLecturer.getId()).toList();
 
         return ResponseEntity.ok().body(activeSessions);
     }
 
-    //this needs json with session_id
-    /*
-    {
-      "id": ...
-    }
-     */
-    @GetMapping("/connected-students")
-    public ResponseEntity<List<Student>> getConnectedStudents(@Valid @RequestBody Session session) {
-        session = sessionRepository.getById(session.getId());
+    @GetMapping("/connected-students&{session_id}")
+    public ResponseEntity<List<Student>> getConnectedStudents(@PathVariable Long session_id) {
+        Session session = sessionRepository.getById(session_id);
 
-        Set<Student> connectedStudents = new HashSet<>();
-
-        List<Progress> progresses = progressRepository.findProgressesBySession(session);
-        for(Progress progress: progresses) {
-            connectedStudents.add(progress.getStudent());
-        }
+        List<Student> connectedStudents = progressRepository.findProgressesBySession(session).stream()
+                .map(Progress::getStudent).distinct().toList();
 
         return ResponseEntity.ok().body(new ArrayList<>(connectedStudents));
     }
 
-    //this needs json with lecturer_id
-    /*
-    {
-        "id": ...
-    }
-    */
-    @GetMapping("/all")
-    public ResponseEntity<List<Session>> getSessionsByLecturer(@Valid @RequestBody Lecturer lecturer) {
-        lecturer = lecturerRepository.getLecturerById(lecturer.getId());
+    @GetMapping("/all&{lecturer_id}")
+    public ResponseEntity<List<Session>> getSessionsByLecturer(@PathVariable Long lecturer_id) {
+        Lecturer finalLecturer = lecturerRepository.getLecturerById(lecturer_id);
 
-        List<Session> allLecturersSessions = new ArrayList<>();
-
-        List<Session> allSessions = sessionRepository.findAll();
-        for(Session session: allSessions) {
-            if(session.getTask().getSubject().getLecturer().getId() == lecturer.getId())
-                allLecturersSessions.add(session);
-        }
+        List<Session> allLecturersSessions = sessionRepository.findAll().stream().filter(session ->
+                session.getTask().getSubject().getLecturer().getId() == finalLecturer.getId()).toList();
 
         return ResponseEntity.ok().body(allLecturersSessions);
     }
 
-    //this needs json with session_id
-    /*
-    {
-      "id": ...
-    }
-     */
-    @GetMapping("/session-details")
-    public ResponseEntity<?> getSessionDetails(@Valid @RequestBody Session session) {
+    @GetMapping("/session-details&{session_id}")
+    public ResponseEntity<?> getSessionDetails(@PathVariable Long session_id) {
         JsonObject response = new JsonObject();
 
-        session = sessionRepository.getById(session.getId());
+        Session session = sessionRepository.getById(session_id);
 
         List<Checkpoint> checkpoints = checkpointRepository.findAllByTask(session.getTask());
-
-        System.out.println(checkpoints.size());
 
         JsonArray checkpointNames = new JsonArray();
         for(Checkpoint checkpoint: checkpoints) {
@@ -166,12 +120,9 @@ public class SessionController {
         response.add("checkpointNames", checkpointNames);
 
         JsonArray jsonStudents = new JsonArray();
-        List<Progress> progresses = progressRepository.findProgressesBySession(session);
-        Set<Student> students = new LinkedHashSet<>();
 
-        for(Progress progress: progresses) {
-            students.add(progress.getStudent());
-        }
+        List<Student> students = progressRepository.findProgressesBySession(session).stream()
+                .map(Progress::getStudent).distinct().toList();
 
         for(Student student: students) {
             JsonObject jStudent = new JsonObject();
