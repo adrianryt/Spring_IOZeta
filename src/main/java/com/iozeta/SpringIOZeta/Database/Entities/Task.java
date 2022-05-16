@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name="TASKS")
@@ -27,4 +25,7 @@ public class Task {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
+
+    @Column(name="COMMIT_SHA")
+    private String commitSha;
 }

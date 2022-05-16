@@ -10,6 +10,6 @@ import java.util.List;
 public interface ProgressRepository extends JpaRepository<Progress, Long> {
     List<Progress> findAllBy();
     List<Progress> findProgressesBySession(Session session);
-
     List<Progress> findProgressesBySessionAndStudent(Session session, Student student);
+    List<Progress> findAllBySessionId(long sessionId);
 }
