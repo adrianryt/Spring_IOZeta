@@ -11,4 +11,5 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
         List<Lecturer> findAllByName(String name);
         Lecturer findLecturerByGitNick(String gitNick);
         Lecturer getLecturerById(Long id);
+        Lecturer findByGitNick(String gitNick);
 }

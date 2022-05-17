@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name="TASKS")
@@ -24,7 +22,15 @@ public class Task {
     @Column(name = "REPOSITORY_NAME")
     private String repoName;
 
-    @ManyToOne
+    @Column(name = "REPOSITORY_LINK")
+    private String repoLink;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
+
+    @Column(name="COMMIT_SHA")
+    private String commitSha;
+
+    public String getSubjectName(){ return subject.getName(); }
 }
