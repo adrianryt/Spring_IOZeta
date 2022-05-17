@@ -2,9 +2,11 @@ package com.iozeta.SpringIOZeta.SecurityConfig;
 
 import com.iozeta.SpringIOZeta.SecurityConfig.filter.CustomAuthenticationFilter;
 import com.iozeta.SpringIOZeta.SecurityConfig.filter.CustomAuthorizationFilter;
+import com.iozeta.SpringIOZeta.SecurityConfig.filter.SimpleCORSFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
    private final UserDetailsService userDetailsService;
    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+   private final SimpleCORSFilter simpleCORSFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,11 +44,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //        narazie mamy tutaj takie demu uprawnień, dokładnie określimy to po ustaleniu szczegółów
 //        jak dajemy permit all nie potrzeba logowania do dostępu tam
-        http.authorizeRequests().antMatchers("/api/login/**","/api/token/refresh/**","/api/lecturer/save", "/student/add-to-session", "/task/add", "/sessions/**", "/subjects/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/lecturers").hasAnyAuthority("LECTURER");
+        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**","/api/token/refresh/**","/api/lecturer/save", "/student/add-to-session").permitAll();
+        http.authorizeRequests().antMatchers("/api/lecturers", "/task/add",  "/subjects/**", "/sessions/**").hasAnyAuthority("LECTURER");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(simpleCORSFilter, CustomAuthorizationFilter.class);
     }
 
     @Bean
