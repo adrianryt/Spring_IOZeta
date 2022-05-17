@@ -12,7 +12,7 @@ public class NewTaskForm {
     private String taskName;
 
     @NotNull
-    private String repositoryLink;
+    private String readmeLink;
 
     @NotNull
     private String subject;
@@ -29,7 +29,7 @@ public class NewTaskForm {
     public String toString() {
         return "NewTaskForm{" +
                 "taskName='" + taskName + '\'' +
-                ", repositoryLink='" + repositoryLink + '\'' +
+                ", repositoryLink='" + readmeLink + '\'' +
                 ", subject='" + subject + '\'' +
                 ", repositoryName='" + repositoryName + '\'' +
                 ", checkpointsContent=" + Arrays.toString(checkpointsContent) +

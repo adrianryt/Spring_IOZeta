@@ -3,6 +3,7 @@ package com.iozeta.SpringIOZeta.Controllers;
 import com.google.gson.JsonObject;
 import com.iozeta.SpringIOZeta.Controllers.utilities.ContentHandler;
 import com.iozeta.SpringIOZeta.Controllers.utilities.NewTaskForm;
+import com.iozeta.SpringIOZeta.Controllers.utilities.TopicJson;
 import com.iozeta.SpringIOZeta.Database.Entities.Checkpoint;
 import com.iozeta.SpringIOZeta.Database.Entities.Lecturer;
 import com.iozeta.SpringIOZeta.Database.Entities.Subject;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/task")
@@ -26,6 +29,23 @@ public class TasksController {
     private final ContentRepository contentRepository;
     private final LecturerRepository lecturerRepository;
 
+    @GetMapping
+    public ResponseEntity<List<TopicJson>> getListOfTopics(){
+
+        return new ResponseEntity<>(
+                taskRepository.findAll().stream().map(TopicJson::taskToTopicJson).collect(Collectors.toList()),
+                HttpStatus.OK);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicJson> getOneTopic(@PathVariable Long id){
+
+        return new ResponseEntity<>(
+                TopicJson.taskToTopicJson(taskRepository.findById(id).get()), HttpStatus.OK
+        );
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> addNewTask(@Valid @RequestBody NewTaskForm newTaskForm) { // check if RequestBody is good
@@ -34,7 +54,7 @@ public class TasksController {
             Task task = this.createTask(
                     newTaskForm.getTaskName(),
                     newTaskForm.getRepositoryName(),
-                    newTaskForm.getRepositoryLink(),
+                    newTaskForm.getReadmeLink(),
                     newTaskForm.getSubject(),
                     newTaskForm.getLecturerGitNick()
             );
@@ -62,12 +82,12 @@ public class TasksController {
         }
     }
 
-    private Task createTask(String name, String repoName, String repoLink, String subjectName, String lecturerGitNick) throws ClassNotFoundException {
+    private Task createTask(String name, String repoName, String readmeLink, String subjectName, String lecturerGitNick) throws ClassNotFoundException {
         Lecturer lecturer = this.lecturerRepository.findLecturerByGitNick(lecturerGitNick);
         Task task = new Task();
         task.setName(name);
         task.setRepoName(repoName);
-        task.setRepoLink(repoLink);
+        task.setReadmeLink(readmeLink);
         Subject subject = this.subjectRepository.getSubjectByNameAndLecturer(subjectName, lecturer);
         if (subject == null || lecturer == null) {
             System.out.println(subject);

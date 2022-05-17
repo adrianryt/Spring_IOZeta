@@ -23,7 +23,7 @@ public class Task {
     private String repoName;
 
     @Column(name = "REPOSITORY_LINK")
-    private String repoLink;
+    private String readmeLink;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUBJECT_ID")
