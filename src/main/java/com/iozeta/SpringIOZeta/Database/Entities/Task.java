@@ -22,7 +22,7 @@ public class Task {
     @Column(name = "REPOSITORY_NAME")
     private String repoName;
 
-    @Column(name = "REPOSITORY_LINK")
+    @Column(name = "README_LINK")
     private String readmeLink;
 
     @ManyToOne(fetch = FetchType.EAGER)

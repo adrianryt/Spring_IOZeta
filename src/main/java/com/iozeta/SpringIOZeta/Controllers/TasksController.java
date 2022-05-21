@@ -29,7 +29,7 @@ public class TasksController {
     private final ContentRepository contentRepository;
     private final LecturerRepository lecturerRepository;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<TopicJson>> getListOfTopics(){
 
         return new ResponseEntity<>(
@@ -38,8 +38,19 @@ public class TasksController {
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TopicJson> getOneTopic(@PathVariable Long id){
+    @GetMapping
+    public ResponseEntity<List<TopicJson>> getListOfTopicsBySubject(@RequestParam("subject_id") Long subjectId ){
+
+        Subject subject = subjectRepository.getSubjectById(subjectId);
+
+        return new ResponseEntity<>(
+                taskRepository.findTasksBySubject(subject).stream().map(TopicJson::taskToTopicJson).collect(Collectors.toList()),
+                HttpStatus.OK);
+
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<TopicJson> getOneTopic(@RequestParam("task_id") Long id){
 
         return new ResponseEntity<>(
                 TopicJson.taskToTopicJson(taskRepository.findById(id).get()), HttpStatus.OK
@@ -83,6 +94,7 @@ public class TasksController {
     }
 
     private Task createTask(String name, String repoName, String readmeLink, String subjectName, String lecturerGitNick) throws ClassNotFoundException {
+        System.out.println("lecturer git nick" + lecturerGitNick);
         Lecturer lecturer = this.lecturerRepository.findLecturerByGitNick(lecturerGitNick);
         Task task = new Task();
         task.setName(name);
