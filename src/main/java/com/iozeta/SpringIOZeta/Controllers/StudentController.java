@@ -37,12 +37,14 @@ public class StudentController {
         }
 
         //TODO check if githubusername exist
-
         //TODO setBranchName
+
         Student student = this.createStudent(studentSessionForm.getGithubUsername(), "BranchName");
         this.createProgresses(student, session);
 
         response.addProperty("message", "Student was added to the session");
+        response.addProperty("session_id", session.getId());
+        response.addProperty("student_id", student.getId());
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
 
