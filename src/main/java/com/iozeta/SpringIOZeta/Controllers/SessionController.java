@@ -3,19 +3,19 @@ package com.iozeta.SpringIOZeta.Controllers;
 import com.google.gson.JsonArray;
 import com.iozeta.SpringIOZeta.Controllers.utilities.EntranceCodeGenerator;
 import com.iozeta.SpringIOZeta.Database.Entities.*;
+import com.iozeta.SpringIOZeta.Database.Entities.utilities.Content;
 import com.iozeta.SpringIOZeta.Database.Repositories.*;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.session.SessionRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.google.gson.JsonObject;
 
 import javax.validation.Valid;
-import javax.ws.rs.Path;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/sessions")
@@ -24,6 +24,7 @@ public class SessionController {
 
     private final EntranceCodeGenerator entranceCodeGenerator;
     private final LabSessionRepository sessionRepository;
+    private final StudentRepository studentRepository;
     private final TaskRepository taskRepository;
     private final LecturerRepository lecturerRepository;
     private final ProgressRepository progressRepository;
@@ -74,8 +75,8 @@ public class SessionController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/active-sessions&{lecturer_id}")
-    public ResponseEntity<List<Session>> getActiveSessions(@PathVariable Long lecturer_id) {
+    @GetMapping("/active-sessions")
+    public ResponseEntity<List<Session>> getActiveSessions(@RequestParam("lecturer_id") Long lecturer_id) {
         Lecturer finalLecturer = lecturerRepository.getLecturerById(lecturer_id);
 
         List<Session> activeSessions = sessionRepository.findAll().stream().filter(session -> session.isActive()
@@ -84,8 +85,8 @@ public class SessionController {
         return ResponseEntity.ok().body(activeSessions);
     }
 
-    @GetMapping("/connected-students&{session_id}")
-    public ResponseEntity<List<Student>> getConnectedStudents(@PathVariable Long session_id) {
+    @GetMapping("/connected-students")
+    public ResponseEntity<List<Student>> getConnectedStudents(@RequestParam("session_id") Long session_id) {
         Session session = sessionRepository.getById(session_id);
 
         List<Student> connectedStudents = progressRepository.findProgressesBySession(session).stream()
@@ -94,8 +95,8 @@ public class SessionController {
         return ResponseEntity.ok().body(new ArrayList<>(connectedStudents));
     }
 
-    @GetMapping("/all&{lecturer_id}")
-    public ResponseEntity<List<Session>> getSessionsByLecturer(@PathVariable Long lecturer_id) {
+    @GetMapping("/all")
+    public ResponseEntity<List<Session>> getSessionsByLecturer(@RequestParam("lecturer_id") Long lecturer_id) {
         Lecturer finalLecturer = lecturerRepository.getLecturerById(lecturer_id);
 
         List<Session> allLecturersSessions = sessionRepository.findAll().stream().filter(session ->
@@ -104,8 +105,8 @@ public class SessionController {
         return ResponseEntity.ok().body(allLecturersSessions);
     }
 
-    @GetMapping("/session-details&{session_id}")
-    public ResponseEntity<?> getSessionDetails(@PathVariable Long session_id) {
+    @GetMapping("/session-details")
+    public ResponseEntity<?> getSessionDetails(@RequestParam("session_id") Long session_id) {
         JsonObject response = new JsonObject();
 
         Session session = sessionRepository.getById(session_id);
@@ -148,6 +149,57 @@ public class SessionController {
         response.add("students", jsonStudents);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/student/session-info")
+    public ResponseEntity<?> getSessionInfoForStudent(@RequestParam("session_id") Long session_id, Long student_id) {
+        JsonObject response = new JsonObject();
+        try {
+            Session session = this.sessionRepository.getById(session_id);
+            Task task = session.getTask();
+            response.addProperty("readmeUrl", task.getReadmeLink());
+            response.addProperty("topicName", task.getName());
+            List<Checkpoint> checkpoints = this.checkpointRepository.findAllByTask(task);
+            JsonArray checkpointsArray = new JsonArray();
+            for (Checkpoint checkpoint: checkpoints) {
+                JsonObject checkpointContent = new JsonObject();
+                Content content = checkpoint.getContent();
+                checkpointContent.addProperty("title", content.getTitle());
+                checkpointContent.addProperty("description", content.getDescription());
+                String[] commandsArray = this.createCommandsArray(content.getTitle(), student_id);
+                JsonArray commands = new JsonArray();
+                Stream.of(commandsArray)
+                        .forEach(commands::add);
+                checkpointContent.add("commands", commands);
+                checkpointsArray.add(checkpointContent);
+            }
+            response.add("checkpoints", checkpointsArray);
+        } catch (Exception e) {
+            response = new JsonObject();
+            response.addProperty("message", "Error while getting Session " + e.getMessage());
+            return new ResponseEntity<>(response.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    private String[] createCommandsArray(String title, Long student_id) throws ClassNotFoundException {
+        ArrayList<String> commands = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        commands.add("git add .");
+        stringBuilder.append("git commmit -m \"");
+        stringBuilder.append(title);
+        stringBuilder.append("\"");
+        commands.add(stringBuilder.toString());
+        Optional<Student> student = this.studentRepository.findById(student_id);
+        if (!student.isPresent()) {
+            throw new ClassNotFoundException("Student no found");
+        }
+        stringBuilder.setLength(0);
+        stringBuilder.append("git push origin/");
+        stringBuilder.append(student.get().getBranchName());
+        commands.add(stringBuilder.toString());
+        return commands.toArray(new String[0]);
     }
 
 }
