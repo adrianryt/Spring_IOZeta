@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -30,4 +31,17 @@ public class Session {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TASK_ID")
     private Task task;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return id == session.id && active == session.active && name.equals(session.name) && accessCode.equals(session.accessCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, accessCode, active);
+    }
 }

@@ -87,9 +87,9 @@ public class SessionController {
 
     @GetMapping("/connected-students")
     public ResponseEntity<List<Student>> getConnectedStudents(@RequestParam("session_id") Long session_id) {
-        Session session = sessionRepository.getById(session_id);
+        Session session = sessionRepository.findSessionById(session_id);
 
-        List<Student> connectedStudents = progressRepository.findProgressesBySession(session).stream()
+        List<Student> connectedStudents = progressRepository.findAllBySession(session).stream()
                 .map(Progress::getStudent).distinct().toList();
 
         return ResponseEntity.ok().body(new ArrayList<>(connectedStudents));
@@ -122,7 +122,7 @@ public class SessionController {
 
         JsonArray jsonStudents = new JsonArray();
 
-        List<Student> students = progressRepository.findProgressesBySession(session).stream()
+        List<Student> students = progressRepository.findAllBySession(session).stream()
                 .map(Progress::getStudent).distinct().toList();
 
         for(Student student: students) {
