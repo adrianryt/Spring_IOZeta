@@ -44,7 +44,7 @@ public class SessionController {
 
         String entranceCode = this.entranceCodeGenerator.generateCode();
 
-        Task task = taskRepository.getById(session.getTask().getId());
+        Task task = taskRepository.findTasksById(session.getTask().getId());
 
         session.setAccessCode(entranceCode);
         session.setActive(true);
