@@ -1,6 +1,7 @@
 package com.iozeta.SpringIOZeta.Controllers;
 
 import com.google.gson.JsonObject;
+import com.iozeta.SpringIOZeta.Controllers.git.RepositoriesController;
 import com.iozeta.SpringIOZeta.Controllers.utilities.ContentHandler;
 import com.iozeta.SpringIOZeta.Controllers.utilities.NewTaskForm;
 import com.iozeta.SpringIOZeta.Controllers.utilities.TopicJson;
@@ -69,6 +70,7 @@ public class TasksController {
                     newTaskForm.getSubject(),
                     newTaskForm.getLecturerGitNick()
             );
+
             this.createCheckpoints(newTaskForm.getCheckpointsContent(), task);
             response.addProperty("message", "New Task has been added successfully");
             return new ResponseEntity<>(response.toString(), HttpStatus.OK);
@@ -93,7 +95,13 @@ public class TasksController {
         }
     }
 
-    private Task createTask(String name, String repoName, String readmeLink, String subjectName, String lecturerGitNick) throws ClassNotFoundException {
+    private static class RepositoryNotCreatedException extends Exception{
+        public RepositoryNotCreatedException(String message) {
+            super(message);
+        }
+    }
+
+    private Task createTask(String name, String repoName, String readmeLink, String subjectName, String lecturerGitNick) throws ClassNotFoundException, RepositoryNotCreatedException {
         System.out.println("lecturer git nick" + lecturerGitNick);
         Lecturer lecturer = this.lecturerRepository.findLecturerByGitNick(lecturerGitNick);
         Task task = new Task();
@@ -107,6 +115,12 @@ public class TasksController {
             throw new ClassNotFoundException("Wrong subject or lecturer");
         }
         task.setSubject(subject);
+
+        var repoCreateResponse = RepositoriesController.createRepository(repoName, lecturer);
+        if(repoCreateResponse.getStatusCodeValue() >= 400){
+           throw new RepositoryNotCreatedException(repoCreateResponse.getBody().toString());
+        }
+
         return this.taskRepository.save(task);
     }
 }

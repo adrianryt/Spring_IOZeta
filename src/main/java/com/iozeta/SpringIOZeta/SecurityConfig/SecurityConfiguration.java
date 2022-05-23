@@ -46,8 +46,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        jak dajemy permit all nie potrzeba logowania do dostępu tam
         http.authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/**").permitAll();
         http.authorizeRequests().antMatchers("/api/login/**","/api/token/refresh/**","/api/lecturer/save", "/student/add-to-session").permitAll();
-        http.authorizeRequests().antMatchers("/api/lecturers", "/task/add",  "/subjects/**", "/sessions/**").hasAnyAuthority("LECTURER");
-        http.authorizeRequests().antMatchers("/sessions/student/session-info").permitAll();
+        http.authorizeRequests().antMatchers("/api/lecturers", "/task/add",  "/subjects/**").hasAnyAuthority("LECTURER");
+        http.authorizeRequests().antMatchers("/sessions/**").permitAll();
+        http.authorizeRequests().antMatchers("/git/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -9,5 +9,8 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findAllBy();
     Student findByGitNick(String gitNickname);
+    List<Student> findStudentsByGitNick(String gitNickname);
     Optional<Student> findById(Long id);
+    Optional<Student> findByBranchName(String branchName);
+
 }

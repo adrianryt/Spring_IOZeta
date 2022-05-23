@@ -26,11 +26,11 @@ public class BranchesController extends AbstractGitController {
     private final TaskRepository taskRepository;
 
     @RequestMapping(value = "/branches", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON)
-    public ResponseEntity<?> addBranch(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> addBranchPost(@RequestBody Map<String, String> body) {
 
         String lecturerNickname = body.get("lecturer_nickname");
-        Lecturer lecturer = lecturerRepository.findByGitNick(lecturerNickname);
-        if (lecturer == null) {
+        var lecturer = lecturerRepository.findByGitNick(lecturerNickname);
+        if (lecturer.isEmpty()) {
             return new ResponseEntity<>("Wrong lecturer", HttpStatus.BAD_REQUEST);
         }
 
@@ -39,7 +39,13 @@ public class BranchesController extends AbstractGitController {
 
         System.out.println(lecturer);
 
-        String uri = "/repos/" + lecturerNickname + "/" + repo + "/git/refs";
+        return addBranch(lecturer.get(), repo, branchName, taskRepository);
+
+    }
+
+    public static ResponseEntity<?> addBranch(Lecturer lecturer, String repo, String branchName, TaskRepository taskRepository){
+
+        String uri = "/repos/" + lecturer.getGitNick() + "/" + repo + "/git/refs";
 
         String commitToBranchFromSha = taskRepository.findByRepoName(repo).getCommitSha();
         System.out.println(commitToBranchFromSha);
@@ -58,7 +64,6 @@ public class BranchesController extends AbstractGitController {
         } else {
             return new ResponseEntity<>("Branch " + branchName + " created on repo " + repo, HttpStatus.CREATED);
         }
-
     }
 
     // just for debug
@@ -87,10 +92,11 @@ public class BranchesController extends AbstractGitController {
     public ResponseEntity<?> getBranchCommitSha(@RequestParam("nick") String lecturerNickname, @RequestParam("repo") String repo) {
 
 
-        Lecturer lecturer = lecturerRepository.findByGitNick(lecturerNickname);
-        if (lecturer == null) {
+        var lecturer = lecturerRepository.findByGitNick(lecturerNickname);
+        if (lecturer.isEmpty()) {
             return new ResponseEntity<>("Wrong lecturer", HttpStatus.BAD_REQUEST);
         }
+
 
         String uri = "/repos/" + lecturerNickname + "/" + repo + "/git/matching-refs/heads";
 
@@ -99,7 +105,7 @@ public class BranchesController extends AbstractGitController {
         queryParams.put("page", 1);
 
         var requestBody = prepareGitHubRequest(
-                get(), uri, queryParams, lecturer.getGitNick(), lecturer.getGitToken());
+                get(), uri, queryParams, lecturer.get().getGitNick(), lecturer.get().getGitToken());
 
         var response = getResponseFromGitHub(requestBody);
 

@@ -44,4 +44,13 @@ public class Session {
     public int hashCode() {
         return Objects.hash(id, name, accessCode, active);
     }
+
+    public Lecturer getLecturer(){
+       return this.getTask().getSubject().getLecturer();
+    }
+
+    public String getRepoName(){
+        return this.getTask().getRepoName();
+    }
+
 }

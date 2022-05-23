@@ -24,15 +24,21 @@ public class RepositoriesController extends AbstractGitController {
     private final LecturerRepository lecturerRepository;
 
     @RequestMapping(value = "/repo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON)
-    public ResponseEntity<?> createRepository(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> createRepositoryPost(@RequestBody Map<String, String> body) {
 
         String nickname = body.get("lecturer_nickname");
         String repoName = body.get("repo_name");
 
-        Lecturer lecturer = lecturerRepository.findByGitNick(nickname);
-        if (lecturer == null) {
+        var lecturer = lecturerRepository.findByGitNick(nickname);
+        if (lecturer.isEmpty()) {
             return new ResponseEntity<>("Lecturer not found. Invalid git nickname.", HttpStatus.BAD_REQUEST);
         }
+
+        return createRepository(repoName, lecturer.get());
+    }
+
+
+    public static ResponseEntity<?> createRepository(String repoName, Lecturer lecturer){
 
         String uri ="/user/repos";
         String gitHubBody = "{\n \"name\": \"" + repoName + "\"\n}";
@@ -49,11 +55,5 @@ public class RepositoriesController extends AbstractGitController {
         }
 
     }
-
-
-
-
-
-
 
 }

@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
@@ -152,7 +153,8 @@ public class SessionController {
     }
 
     @GetMapping("/student/session-info")
-    public ResponseEntity<?> getSessionInfoForStudent(@RequestParam("session_id") Long session_id, Long student_id) {
+    public ResponseEntity<?> getSessionInfoForStudent(@RequestParam("session_id") Long session_id,
+                                                      @RequestParam("student_id") Long student_id) {
         JsonObject response = new JsonObject();
         try {
             Session session = this.sessionRepository.getById(session_id);
@@ -200,6 +202,21 @@ public class SessionController {
         stringBuilder.append(student.get().getBranchName());
         commands.add(stringBuilder.toString());
         return commands.toArray(new String[0]);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Session>> getSessionsByTaskId(@RequestParam("task_id") Long taskId){
+
+        System.out.println("get session by taks id !!!!!!!!!!!!");
+
+        return new ResponseEntity<>(sessionRepository.findSessionsByTaskId(taskId).stream().sorted((task1,task2)->{
+            if(task1.isActive()){
+                return -1;
+            }else{
+                return 1;
+            }
+        }).collect(Collectors.toList()), HttpStatus.OK);
+
     }
 
 }

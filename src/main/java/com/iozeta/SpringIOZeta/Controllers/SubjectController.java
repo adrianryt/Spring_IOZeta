@@ -1,5 +1,6 @@
 package com.iozeta.SpringIOZeta.Controllers;
 
+import com.iozeta.SpringIOZeta.Controllers.git.RepositoriesController;
 import com.iozeta.SpringIOZeta.Controllers.utilities.SubjectJson;
 import com.iozeta.SpringIOZeta.Controllers.utilities.TopicJson;
 import com.iozeta.SpringIOZeta.Database.Entities.Lecturer;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +29,12 @@ public class SubjectController {
 
     @GetMapping("/all")
     public ResponseEntity<List<SubjectJson>> getAllSubjects(@RequestParam("username") String username) {
-        Lecturer lecturer = lecturerRepository.findByGitNick(username);
+        var lecturer = lecturerRepository.findByGitNick(username);
+        if(lecturer.isEmpty()){
+            return ResponseEntity.ok().body(new ArrayList<>());
+        }
 
-         var subjects = subjectRepository.findSubjectsByLecturer(lecturer).stream().map(subject -> {
+         var subjects = subjectRepository.findSubjectsByLecturer(lecturer.get()).stream().map(subject -> {
             var tasks = taskRepository.findTasksBySubject(subject).stream().
                     map(TopicJson::taskToTopicJson).toList();
 
