@@ -23,7 +23,7 @@ public class Subject {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LECTURER_ID")
     private Lecturer lecturer;
 }

@@ -50,7 +50,7 @@ public class SubjectController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("subject/save").toUriString());
 
         Long lecturerId = subject.getLecturer().getId();
-        Lecturer lecturer = lecturerRepository.getLecturerById(lecturerId);
+        Lecturer lecturer = lecturerRepository.findLecturerById(lecturerId);
         subject.setLecturer(lecturer);
 
         return ResponseEntity.created(uri).body(subjectRepository.save(subject));
