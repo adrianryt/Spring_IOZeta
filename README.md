@@ -1,5 +1,5 @@
 # Spring_IOZeta
-
+[![CircleCI](https://circleci.com/gh/adrianryt/Spring_IOZeta/tree/main.svg?style=svg)](https://circleci.com/gh/adrianryt/Spring_IOZeta/tree/main)
 ## Zasady ogólne:
 
 * Obowiązkowe code review (2 ticki)  (sprawdzamy też testy!)
