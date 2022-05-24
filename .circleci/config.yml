@@ -1,55 +1,48 @@
-import org.apache.tools.ant.taskdefs.condition.Os
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
 
-plugins {
-    id 'org.springframework.boot' version '2.6.5'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-    id 'war'
-}
+      - image: circleci/postgres:9.6.2-alpine
+        environment:
+          POSTGRES_USER: postgres 
+          POSTGRES_DB: jdbc:postgresql://localhost:5432/io
+          POSTGRES_PASSWORD: kopyto
 
-group = 'com.iozeta'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
+    working_directory: ~/repo
 
-repositories {
-    mavenCentral()
-}
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-jersey'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.session:spring-session-jdbc'
-    implementation 'junit:junit:4.13.1'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    testImplementation 'org.springframework.security:spring-security-test'
-    implementation 'com.auth0:java-jwt:3.19.1'
+    steps:
+      - checkout
 
-    if (Os.isFamily(Os.FAMILY_MAC)){
-        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.72.Final:osx-aarch_64'
-    }
-}
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
-test {
-    useJUnitPlatform()
-}
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # run tests!
+      - run: gradle test
