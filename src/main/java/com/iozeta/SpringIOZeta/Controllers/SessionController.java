@@ -138,6 +138,7 @@ public class SessionController {
 
                 commit.addProperty("checkpointName", progress.getCheckpoint().getContent().getTitle());
                 commit.addProperty("stat", progress.getStatus().toString());
+                //TODO change getCommitHash to getCommitLink
                 commit.addProperty("url", progress.getCommitHash());
 
                 commits.add(commit);
