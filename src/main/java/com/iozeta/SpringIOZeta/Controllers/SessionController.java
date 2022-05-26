@@ -43,7 +43,7 @@ public class SessionController {
     }
      */
     @PostMapping("/create")
-    public ResponseEntity<Session> createSession(@Valid @RequestBody Session session) {
+    public ResponseEntity<?> createSession(@Valid @RequestBody Session session) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("session/create").toUriString());
 
         String entranceCode = this.entranceCodeGenerator.generateCode();
@@ -53,10 +53,13 @@ public class SessionController {
         session.setAccessCode(entranceCode);
         session.setActive(true);
         session.setTask(task);
-
-        String commitSha = requestForCommitToGithub(session.getLecturer(), task.getRepoName(), "main");
-        task.setCommitSha(commitSha);
-        taskRepository.save(task);
+        try {
+            String commitSha = requestForCommitToGithub(session.getLecturer(), task.getRepoName(), "main");
+            task.setCommitSha(commitSha);
+            taskRepository.save(task);
+        }catch (RuntimeException ex){
+            return ResponseEntity.internalServerError().body("Error communicating with github");
+        }
 
         session = sessionRepository.save(session);
 
