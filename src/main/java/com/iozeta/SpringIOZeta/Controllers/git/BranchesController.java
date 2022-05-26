@@ -97,34 +97,29 @@ public class BranchesController extends AbstractGitController {
             return new ResponseEntity<>("Wrong lecturer", HttpStatus.BAD_REQUEST);
         }
 
+        String res = requestForCommitToGithub(lecturer.get(), repo, "main");
 
-        String uri = "/repos/" + lecturerNickname + "/" + repo + "/git/matching-refs/heads";
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    public static String requestForCommitToGithub(Lecturer lecturer, String repo, String branch){
+        String uri = "/repos/" + lecturer.getGitNick() + "/" + repo + "/git/matching-refs/heads/" + branch;
 
         var queryParams = new HashMap<String, Object>();
-        queryParams.put("per_page", 100);
-        queryParams.put("page", 1);
 
         var requestBody = prepareGitHubRequest(
-                get(), uri, queryParams, lecturer.get().getGitNick(), lecturer.get().getGitToken());
+                get(), uri, queryParams, lecturer.getGitNick(), lecturer.getGitToken());
 
         var response = getResponseFromGitHub(requestBody);
 
+        System.out.println(response.block());
+
         if (Objects.equals(response.block(), "Error response")) {
-            return new ResponseEntity<>("Error checking git sha", HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            Gson gson = new Gson();
-
-            GitHubBranch[] responseAsArray = gson.fromJson(response.block(), GitHubBranch[].class);
-            String res = "";
-            try {
-                res = responseAsArray[0].getSha();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return new ResponseEntity<>(res, HttpStatus.OK);
-
+            throw new RuntimeException("Error while getting response from github");
+        } else{
+            GitHubBranch[] gitHubBranch = new Gson().fromJson(response.block(), GitHubBranch[].class);
+            return gitHubBranch[0].getSha();
         }
-
     }
 
 }

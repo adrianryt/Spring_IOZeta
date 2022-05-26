@@ -18,6 +18,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.iozeta.SpringIOZeta.Controllers.git.BranchesController.requestForCommitToGithub;
+
 @RestController
 @RequestMapping("/sessions")
 @RequiredArgsConstructor
@@ -51,6 +53,10 @@ public class SessionController {
         session.setAccessCode(entranceCode);
         session.setActive(true);
         session.setTask(task);
+
+        String commitSha = requestForCommitToGithub(session.getLecturer(), task.getRepoName(), "main");
+        task.setCommitSha(commitSha);
+        taskRepository.save(task);
 
         session = sessionRepository.save(session);
 
