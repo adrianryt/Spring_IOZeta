@@ -44,6 +44,9 @@ public class SessionController {
     public ResponseEntity<Session> createSession(@Valid @RequestBody Session session) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("session/create").toUriString());
 
+        if(sessionRepository.findSessionByName(session.getName()) != null){
+            return ResponseEntity.badRequest().body(session);
+        }
         String entranceCode = this.entranceCodeGenerator.generateCode();
 
         Task task = taskRepository.findTasksById(session.getTask().getId());
