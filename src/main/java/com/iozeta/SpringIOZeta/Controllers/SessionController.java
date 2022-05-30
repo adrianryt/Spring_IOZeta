@@ -135,6 +135,9 @@ public class SessionController {
         List<Student> students = progressRepository.findAllBySession(session).stream()
                 .map(Progress::getStudent).distinct().toList();
 
+        Lecturer lecturer = session.getTask().getSubject().getLecturer();
+        String repoName = session.getRepoName();
+
         for(Student student: students) {
             JsonObject jStudent = new JsonObject();
             jStudent.addProperty("name", student.getGitNick());
@@ -147,8 +150,9 @@ public class SessionController {
 
                 commit.addProperty("checkpointName", progress.getCheckpoint().getContent().getTitle());
                 commit.addProperty("stat", progress.getStatus().toString());
-                //TODO change getCommitHash to getCommitLink
-                commit.addProperty("url", progress.getCommitHash());
+
+                String commitLink = "github.com/" + lecturer.getGitNick() + "/" + repoName + "/commit/" + progress.getCommitHash();
+                commit.addProperty("url", commitLink);
 
                 commits.add(commit);
             }
