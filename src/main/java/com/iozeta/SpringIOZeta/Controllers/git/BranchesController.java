@@ -139,8 +139,12 @@ public class BranchesController extends AbstractGitController {
         } else{
             CommitJson[] commits = new Gson().fromJson(response.block(), CommitJson[].class);
 
-            CommitJson commitJson = Arrays.stream(commits).filter(commitJson1 -> Objects.equals(commitJson1.getCommit().message(), commitMessage)).min((commitJson1, commitJson2) ->
-                    -1 * commitJson1.getCommit().author().date().compareTo(commitJson2.getCommit().author().date())).get();
+            Arrays.stream(commits).forEach(System.out::println);
+
+
+            CommitJson commitJson = Arrays.stream(commits).filter(commitJson1 -> Objects.equals(commitJson1.getCommit().getMessage(), commitMessage)).min((commitJson1, commitJson2) ->
+                    -1 * commitJson1.getCommit().getAuthor().getDate().compareTo(commitJson2.getCommit().getAuthor().getDate()))
+                    .get();
 
             return commitJson.getSha();
         }

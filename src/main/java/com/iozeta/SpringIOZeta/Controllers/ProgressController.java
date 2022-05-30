@@ -30,19 +30,26 @@ public class ProgressController {
 
     @PostMapping("/update")
     public ResponseEntity<?> updateProgress(@Valid @RequestBody UpdateProgressForm updateProgressForm) {
-        Student student = studentRepository.findById(updateProgressForm.getStudentId()).get();
-        Session session = sessionRepository.findSessionById(updateProgressForm.getSessionId());
+        Student student = studentRepository.findById(updateProgressForm.getStudent_id()).get();
+        Session session = sessionRepository.findSessionById(updateProgressForm.getSession_id());
 
         List<Progress> progresses = progressRepository.findProgressesBySessionAndStudent(session, student);
 
-        Progress progress = (Progress) progresses.stream().filter(progress1 -> progress1.getCheckpoint().getNumber() == updateProgressForm.getCheckpointNumber());
+        Progress progress = progresses.stream().filter(
+                progress1 -> progress1.getCheckpoint().getNumber() == updateProgressForm.getCheckpoint_number())
+                .findFirst().get();
 
-        String commitHash = BranchesController.requestForCommitSha(session.getLecturer(), session.getRepoName(), student.getBranchName(), progress.getCheckpoint().getContent().getTitle());
+        try {
 
-        progress.setCommitHash(commitHash);
-        progress.setStatus(Status.DONE);
+            String commitHash = BranchesController.requestForCommitSha(
+                    session.getLecturer(), session.getRepoName(), student.getBranchName(), progress.getCommitMessage());
+            progress.setCommitHash(commitHash);
+            progress.setStatus(Status.DONE);
 
-        progressRepository.save(progress);
+            progressRepository.save(progress);
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
 
         return ResponseEntity.ok().build();
     }

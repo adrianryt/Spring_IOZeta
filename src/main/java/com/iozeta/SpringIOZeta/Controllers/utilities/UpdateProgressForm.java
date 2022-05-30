@@ -1,20 +1,20 @@
 package com.iozeta.SpringIOZeta.Controllers.utilities;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
+@Data
 public class UpdateProgressForm {
 
     @NotNull
-    private long studentId;
+    private long student_id;
 
     @NotNull
-    private long sessionId;
+    private long session_id;
 
     @NotNull
-    private long checkpointNumber;
+    private long checkpoint_number;
 }
