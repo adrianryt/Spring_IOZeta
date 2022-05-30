@@ -1,6 +1,7 @@
 package com.iozeta.SpringIOZeta.Controllers.git;
 
 import com.google.gson.Gson;
+import com.iozeta.SpringIOZeta.Controllers.utilities.CommitJson;
 import com.iozeta.SpringIOZeta.Controllers.utilities.GitHubBranch;
 import com.iozeta.SpringIOZeta.Database.Entities.Lecturer;
 import com.iozeta.SpringIOZeta.Database.Repositories.LecturerRepository;
@@ -8,14 +9,13 @@ import com.iozeta.SpringIOZeta.Database.Repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import reactor.core.publisher.Mono;
 
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/git")
@@ -119,6 +119,30 @@ public class BranchesController extends AbstractGitController {
         } else{
             GitHubBranch[] gitHubBranch = new Gson().fromJson(response.block(), GitHubBranch[].class);
             return gitHubBranch[0].getSha();
+        }
+    }
+
+    public static String requestForCommitSha(Lecturer lecturer, String repoName, String branchName, String commitMessage) {
+        String uri = "/repos/" + lecturer.getGitNick() + "/" + repoName + "/commits";
+
+        HashMap<String, Object> queryParams = new HashMap<>();
+        queryParams.put("sha", branchName);
+
+        var requestBody = prepareGitHubRequest(
+                get(), uri, queryParams, lecturer.getGitNick(), lecturer.getGitToken()
+        );
+
+        var response = getResponseFromGitHub(requestBody);
+
+        if (Objects.equals(response.block(), "Error response")) {
+            throw new RuntimeException("Error while getting response from github");
+        } else{
+            CommitJson[] commits = new Gson().fromJson(response.block(), CommitJson[].class);
+
+            CommitJson commitJson = Arrays.stream(commits).filter(commitJson1 -> Objects.equals(commitJson1.getCommit().message(), commitMessage)).min((commitJson1, commitJson2) ->
+                    -1 * commitJson1.getCommit().author().date().compareTo(commitJson2.getCommit().author().date())).get();
+
+            return commitJson.getSha();
         }
     }
 

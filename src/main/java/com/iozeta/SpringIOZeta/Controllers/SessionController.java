@@ -178,6 +178,7 @@ public class SessionController {
                 Content content = checkpoint.getContent();
                 checkpointContent.addProperty("title", content.getTitle());
                 checkpointContent.addProperty("description", content.getDescription());
+                checkpointContent.addProperty("number", checkpoint.getNumber());
                 String[] commandsArray = this.createCommandsArray(content.getTitle(), student_id);
                 JsonArray commands = new JsonArray();
                 Stream.of(commandsArray)
@@ -216,8 +217,6 @@ public class SessionController {
 
     @GetMapping
     public ResponseEntity<List<Session>> getSessionsByTaskId(@RequestParam("task_id") Long taskId){
-
-        System.out.println("get session by taks id !!!!!!!!!!!!");
 
         return new ResponseEntity<>(sessionRepository.findSessionsByTaskId(taskId).stream().sorted((task1,task2)->{
             if(task1.isActive()){
