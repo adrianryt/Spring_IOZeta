@@ -41,7 +41,7 @@ public class RepositoriesController extends AbstractGitController {
     public static ResponseEntity<?> createRepository(String repoName, Lecturer lecturer){
 
         String uri ="/user/repos";
-        String gitHubBody = "{\n \"name\": \"" + repoName + "\"\n}";
+        String gitHubBody = "{\n \"name\": \"" + repoName + "\",\n \"auto_init\": true}";
 
         var headersSpec = prepareGitHubRequest(
                 post(), uri, gitHubBody, lecturer.getGitNick(), lecturer.getGitToken());

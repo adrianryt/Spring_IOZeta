@@ -22,9 +22,6 @@ public class Task {
     @Column(name = "REPOSITORY_NAME")
     private String repoName;
 
-    @Column(name = "README_LINK")
-    private String readmeLink;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SUBJECT_ID")
     private Subject subject;
@@ -32,5 +29,14 @@ public class Task {
     @Column(name="COMMIT_SHA")
     private String commitSha;
 
+
     public String getSubjectName(){ return subject.getName(); }
+    public String getReadmeLink() {
+        StringBuilder stringBuilder = new StringBuilder("https://github.com/");
+        stringBuilder.append(subject.getLecturer().getGitNick());
+        stringBuilder.append("/");
+        stringBuilder.append(repoName);
+        stringBuilder.append("/blob/main/README.md");
+        return stringBuilder.toString();
+    }
 }
