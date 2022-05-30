@@ -66,11 +66,9 @@ public class TasksController {
             Task task = this.createTask(
                     newTaskForm.getTaskName(),
                     newTaskForm.getRepositoryName(),
-                    newTaskForm.getReadmeLink(),
                     newTaskForm.getSubject(),
                     newTaskForm.getLecturerGitNick()
             );
-
             this.createCheckpoints(newTaskForm.getCheckpointsContent(), task);
             response.addProperty("message", "New Task has been added successfully");
             return new ResponseEntity<>(response.toString(), HttpStatus.OK);
@@ -101,13 +99,12 @@ public class TasksController {
         }
     }
 
-    private Task createTask(String name, String repoName, String readmeLink, String subjectName, String lecturerGitNick) throws ClassNotFoundException, RepositoryNotCreatedException {
+    private Task createTask(String name, String repoName, String subjectName, String lecturerGitNick) throws ClassNotFoundException, RepositoryNotCreatedException {
         System.out.println("lecturer git nick" + lecturerGitNick);
         Lecturer lecturer = this.lecturerRepository.findLecturerByGitNick(lecturerGitNick);
         Task task = new Task();
         task.setName(name);
         task.setRepoName(repoName);
-        task.setReadmeLink(readmeLink);
         Subject subject = this.subjectRepository.getSubjectByNameAndLecturer(subjectName, lecturer);
         if (subject == null || lecturer == null) {
             System.out.println(subject);
