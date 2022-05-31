@@ -9,7 +9,7 @@ public interface LabSessionRepository extends JpaRepository<Session, Long> {
     List<Session> findAllBy();
     Session findSessionById(Long id);
     Session findSessionByAccessCode(String accessCode);
-
+    Session findSessionByName(String name);
     List<Session> findSessionsByTaskId(Long taskId);
 
 }
