@@ -34,4 +34,9 @@ public class Progress {
 
     @Column(name = "STATUS")
     private Status status;
+
+    public String getCommitMessage(){
+        return this.getCheckpoint().getContent().getTitle();
+    }
+
 }

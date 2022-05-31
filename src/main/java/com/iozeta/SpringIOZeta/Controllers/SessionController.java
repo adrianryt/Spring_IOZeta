@@ -5,6 +5,7 @@ import com.iozeta.SpringIOZeta.Controllers.utilities.EntranceCodeGenerator;
 import com.iozeta.SpringIOZeta.Database.Entities.*;
 import com.iozeta.SpringIOZeta.Database.Entities.utilities.Content;
 import com.iozeta.SpringIOZeta.Database.Repositories.*;
+import com.iozeta.SpringIOZeta.Database.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,9 @@ public class SessionController {
     public ResponseEntity<?> createSession(@Valid @RequestBody Session session) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("session/create").toUriString());
 
+        if(sessionRepository.findSessionByName(session.getName()) != null){
+            return ResponseEntity.badRequest().body(session);
+        }
         String entranceCode = this.entranceCodeGenerator.generateCode();
 
         Task task = taskRepository.findTasksById(session.getTask().getId());
@@ -176,16 +180,26 @@ public class SessionController {
         JsonObject response = new JsonObject();
         try {
             Session session = this.sessionRepository.getById(session_id);
+            Student student = this.studentRepository.findById(student_id).get();
             Task task = session.getTask();
             response.addProperty("readmeUrl", task.getReadmeLink());
             response.addProperty("topicName", task.getName());
             List<Checkpoint> checkpoints = this.checkpointRepository.findAllByTask(task);
             JsonArray checkpointsArray = new JsonArray();
+
+            List<Progress> progresses = progressRepository.findProgressesBySessionAndStudent(session, student);
+
             for (Checkpoint checkpoint: checkpoints) {
                 JsonObject checkpointContent = new JsonObject();
                 Content content = checkpoint.getContent();
                 checkpointContent.addProperty("title", content.getTitle());
                 checkpointContent.addProperty("description", content.getDescription());
+                checkpointContent.addProperty("number", checkpoint.getNumber());
+
+                Progress progress = progresses.stream().filter(
+                        progress1 -> progress1.getCheckpoint().getId() == checkpoint.getId()).findFirst().get();
+
+                checkpointContent.addProperty("progressCheckBox", progress.getStatus() == Status.DONE);
                 String[] commandsArray = this.createCommandsArray(content.getTitle(), student_id);
                 JsonArray commands = new JsonArray();
                 Stream.of(commandsArray)
@@ -197,6 +211,8 @@ public class SessionController {
         } catch (Exception e) {
             response = new JsonObject();
             response.addProperty("message", "Error while getting Session " + e.getMessage());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             return new ResponseEntity<>(response.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -224,8 +240,6 @@ public class SessionController {
 
     @GetMapping
     public ResponseEntity<List<Session>> getSessionsByTaskId(@RequestParam("task_id") Long taskId){
-
-        System.out.println("get session by taks id !!!!!!!!!!!!");
 
         return new ResponseEntity<>(sessionRepository.findSessionsByTaskId(taskId).stream().sorted((task1,task2)->{
             if(task1.isActive()){
