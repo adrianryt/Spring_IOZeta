@@ -32,11 +32,11 @@ public class Task {
 
     public String getSubjectName(){ return subject.getName(); }
     public String getReadmeLink() {
-        StringBuilder stringBuilder = new StringBuilder("https://github.com/");
+        StringBuilder stringBuilder = new StringBuilder("https://api.github.com/repos/");
         stringBuilder.append(subject.getLecturer().getGitNick());
         stringBuilder.append("/");
         stringBuilder.append(repoName);
-        stringBuilder.append("/blob/main/README.md");
+        stringBuilder.append("/contents/README.md");
         return stringBuilder.toString();
     }
 }
