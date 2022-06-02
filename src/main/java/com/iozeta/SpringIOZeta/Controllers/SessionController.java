@@ -223,7 +223,7 @@ public class SessionController {
         ArrayList<String> commands = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         commands.add("git add .");
-        stringBuilder.append("git commmit -m \"");
+        stringBuilder.append("git commit -m \"");
         stringBuilder.append(title);
         stringBuilder.append("\"");
         commands.add(stringBuilder.toString());
@@ -232,7 +232,7 @@ public class SessionController {
             throw new ClassNotFoundException("Student no found");
         }
         stringBuilder.setLength(0);
-        stringBuilder.append("git push origin/");
+        stringBuilder.append("git push origin ");
         stringBuilder.append(student.get().getBranchName());
         commands.add(stringBuilder.toString());
         return commands.toArray(new String[0]);
