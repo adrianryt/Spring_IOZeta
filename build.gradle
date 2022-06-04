@@ -20,6 +20,13 @@ configurations {
 repositories {
     mavenCentral()
 }
+bootJar{
+
+}
+
+jar {
+
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -44,11 +51,26 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'com.auth0:java-jwt:3.19.1'
+    implementation 'com.github.jsimone:webapp-runner:8.5.11.3'
 
     if (Os.isFamily(Os.FAMILY_MAC)){
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.72.Final:osx-aarch_64'
     }
 }
+
+task stage() {
+    dependsOn clean, war
+}
+war.mustRunAfter clean
+
+task copyToLib(type: Copy) {
+    into "$buildDir/server"
+    from(configurations.runtimeClasspath) {
+        include "webapp-runner*"
+    }
+}
+
+stage.dependsOn(copyToLib)
 
 test {
     useJUnitPlatform()
