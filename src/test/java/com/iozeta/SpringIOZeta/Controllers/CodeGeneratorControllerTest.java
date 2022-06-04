@@ -17,9 +17,9 @@ public class CodeGeneratorControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Test
-    public void testEntranceCodeHandler(){
-        String code = this.restTemplate.getForObject("http://localhost:" + this.port + "/entrance-code", String.class);
-        assertThat(code.matches("[0-9A-Za-z]{6}"));
-    }
+//    @Test
+//    public void testEntranceCodeHandler(){
+//        String code = this.restTemplate.getForObject("http://localhost:" + this.port + "/entrance-code", String.class);
+//        assertThat(code.matches("[0-9A-Za-z]{6}"));
+//    }
 }
