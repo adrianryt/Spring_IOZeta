@@ -26,7 +26,11 @@ public class LecturerController {
     }
 
     @PostMapping("/lecturer/save")
-    public ResponseEntity<Lecturer> saveUser(@RequestBody Lecturer lecturer){
+    public ResponseEntity<?> saveUser(@RequestBody Lecturer lecturer){
+        if (lecturerService.getLecturers().stream().anyMatch(lecturer1 ->
+                lecturer1.getGitNick().equals(lecturer.getGitNick()))){
+            return ResponseEntity.internalServerError().body("Github username already in use");
+        }
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/lecturer/save").toUriString());
         return ResponseEntity.created(uri).body(lecturerService.saveLecturer(lecturer));
     }
