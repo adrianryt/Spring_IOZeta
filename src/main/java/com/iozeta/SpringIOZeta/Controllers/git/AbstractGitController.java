@@ -14,22 +14,22 @@ import java.util.Map;
 
 public abstract class AbstractGitController {
 
-    protected static String baseUrl = "https://api.github.com";
+    public static String baseUrl = "https://api.github.com";
 
-    protected static ClientHttpConnector connector() {
+    public static ClientHttpConnector connector() {
         return new
                 ReactorClientHttpConnector(HttpClient.create(ConnectionProvider.newConnection()));
     }
 
-    protected static WebClient.RequestBodyUriSpec post(){
+    public static WebClient.RequestBodyUriSpec post(){
         return WebClient.builder().clientConnector(connector()).baseUrl(baseUrl).build().post();
     }
 
-    protected static WebClient.RequestHeadersUriSpec<?> get(){
+    public static WebClient.RequestHeadersUriSpec<?> get(){
         return WebClient.builder().clientConnector(connector()).baseUrl(baseUrl).build().get();
     }
 
-    protected static WebClient.RequestBodyUriSpec put(){
+    public static WebClient.RequestBodyUriSpec put(){
         return WebClient.builder().clientConnector(connector()).baseUrl(baseUrl).build().put();
     }
 

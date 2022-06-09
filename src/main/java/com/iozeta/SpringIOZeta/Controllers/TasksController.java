@@ -30,15 +30,6 @@ public class TasksController {
     private final ContentRepository contentRepository;
     private final LecturerRepository lecturerRepository;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<TopicJson>> getListOfTopics(){
-
-        return new ResponseEntity<>(
-                taskRepository.findAll().stream().map(TopicJson::taskToTopicJson).collect(Collectors.toList()),
-                HttpStatus.OK);
-
-    }
-
     @GetMapping
     public ResponseEntity<List<TopicJson>> getListOfTopicsBySubject(@RequestParam("subject_id") Long subjectId ){
 
