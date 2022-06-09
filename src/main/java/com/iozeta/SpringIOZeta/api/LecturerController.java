@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.iozeta.SpringIOZeta.Controllers.git.AbstractGitController.prepareGitHubRequest;
 import static com.iozeta.SpringIOZeta.Controllers.git.AbstractGitController.get;
@@ -38,15 +39,12 @@ public class LecturerController {
                 new HashMap<>(), lecturer.getGitNick(), lecturer.getGitToken());
 
         var monoResponse = githubRequest.exchangeToMono(response -> {
-
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!");
-            response.headers().asHttpHeaders().entrySet().forEach(System.out::println);
             if(response.headers().header("X-OAuth-Scopes").size() == 0){
                 return Mono.just("token error");
             }
             return response.bodyToMono(String.class);
         });
-        if(monoResponse.block().equals("token error")){
+        if(Objects.equals(monoResponse.block(), "token error")){
             return ResponseEntity.internalServerError().body("Provided token is invalid. Check if the authorization is sufficient.");
         }
 
