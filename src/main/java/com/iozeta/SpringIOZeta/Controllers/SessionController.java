@@ -184,6 +184,9 @@ public class SessionController {
             Task task = session.getTask();
             response.addProperty("readmeUrl", task.getReadmeLink());
             response.addProperty("topicName", task.getName());
+            response.addProperty("lecturerNickname", task.getLecturer().getGitNick());
+            response.addProperty("repoName", task.getRepoName());
+            response.addProperty("branchName", student.getBranchName());
             List<Checkpoint> checkpoints = this.checkpointRepository.findAllByTask(task);
             JsonArray checkpointsArray = new JsonArray();
 

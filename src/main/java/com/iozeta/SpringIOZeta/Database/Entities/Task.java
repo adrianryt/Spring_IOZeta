@@ -39,4 +39,9 @@ public class Task {
         stringBuilder.append("/contents/README.md");
         return stringBuilder.toString();
     }
+
+    public Lecturer getLecturer(){
+        return this.getSubject().getLecturer();
+    }
+
 }
