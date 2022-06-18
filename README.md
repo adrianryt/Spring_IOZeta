@@ -5,10 +5,14 @@ database and create a database and user in it according to the file:
 you will find these properties:
 
 <h6><strong><code>
-spring.datasource.url=jdbc:postgresql://localhost:5432/io   
+spring.datasource.url=jdbc:postgresql://localhost:5432/io
+</code></strong></h6>
+<h6><strong><code>
 spring.datasource.username=postgres   
+</code></strong></h6>
+<h6><strong><code>
 spring.datasource.password=kopyto   
- </code></strong></h6>
+</code></strong></h6>
 
 the last step is to configure java for the project as 17, and run the main function in the file:
 
